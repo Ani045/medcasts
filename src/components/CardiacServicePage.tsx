@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import {
   Star,
   MapPin,
@@ -31,21 +32,25 @@ import Footer from './Footer';
 const PAGE_SIZE = 3;
 
 const CardiacServicePage = () => {
-  const [selectedDepartment, setSelectedDepartment] = useState('Cardiology');
-  const [selectedServices, setSelectedServices] = useState([]);
-  const [sortBy, setSortBy] = useState('Most Popular');
-  const [departmentDropdown, setDepartmentDropdown] = useState(false);
-  const [servicesDropdown, setServicesDropdown] = useState(false);
-  const [page, setPage] = useState(1);
+  const [selectedDepartment, setSelectedDepartment] = useState<string>('Cardiology');
+  const [selectedServices, setSelectedServices] = useState<string[]>([]);
+  const [sortBy, setSortBy] = useState<string>('Most Popular');
+  const [departmentDropdown, setDepartmentDropdown] = useState<boolean>(false);
+  const [servicesDropdown, setServicesDropdown] = useState<boolean>(false);
+  const [page, setPage] = useState<number>(1);
 
   // Testimonials state
-  const [currentTestimonialSlide, setCurrentTestimonialSlide] = useState(0);
-  const [testimonialCardsPerSlide, setTestimonialCardsPerSlide] = useState(4);
-  const [selectedPatient, setSelectedPatient] = useState(null);
-  const [searchTerm, setSearchTerm] = useState('');
-  const [activeFilter, setActiveFilter] = useState('All');
-  const [showQuoteForm, setShowQuoteForm] = useState(false);
-  const [formData, setFormData] = useState({
+  const [currentTestimonialSlide, setCurrentTestimonialSlide] = useState<number>(0);
+  const [testimonialCardsPerSlide, setTestimonialCardsPerSlide] = useState<number>(4);
+  const [selectedPatient, setSelectedPatient] = useState<any>(null);
+  const [searchTerm, setSearchTerm] = useState<string>('');
+  const [activeFilter, setActiveFilter] = useState<string>('All');
+  const [showQuoteForm, setShowQuoteForm] = useState<boolean>(false);
+  const [formData, setFormData] = useState<{
+    name: string;
+    country: string;
+    phone: string;
+  }>({
     name: '',
     country: '',
     phone: ''
@@ -55,9 +60,9 @@ const CardiacServicePage = () => {
   const departments = [
   { name: 'Cardiology', route: '/cardiac', active: true },
   { name: 'Oncology', route: '/oncology-service', active: true },
-  { name: 'BMT', route: '/bmt', active: false },
-  { name: 'Neuro Spine', route: '/neuro-spine', active: false },
-  { name: 'GI Surgery', route: '/gi-surgery', active: false },
+  { name: 'BMT', route: '/bmt', active: true },
+  { name: 'Neuro Spine', route: '/neuro-spine', active: true },
+  { name: 'GI Surgery', route: '/gi-surgery', active: true },
   { name: 'Orthopaedics', route: '/orthopaedic', active: true },
   { name: 'Pediatric Cardiac', route: '/pediatric-cardiac', active: false }];
 
@@ -409,15 +414,43 @@ const CardiacServicePage = () => {
 
   const cardiacTreatmentTags = ['All', 'Cardiac Surgery', 'Interventional Cardiology', 'Electrophysiology', 'Pediatric Cardiac'];
 
+  // Define Hospital interface
+  interface Hospital {
+    id: number;
+    name: string;
+    location: string;
+    image: string;
+    mapEmbedUrl: string;
+    airportDistance: string;
+    description: string;
+    rating: number;
+    reviews: number;
+    specialties: string[];
+    accreditation: string;
+    procedures: Array<{ name: string; price: number; priceRange: string }>;
+    priceFrom: number;
+    priceTo: number;
+    priceFromText: string;
+    priceToText: string;
+    duration: string;
+    surgeons: string;
+    successRate: string;
+    treatments: string[];
+    services?: string[];
+  }
+
+  // Type assertion for cardiacPatientStories
+  const typedCardiacPatientStories = cardiacPatientStories as unknown as Patient[];
+
   // Filter and sort logic - Artemis Hospital first
-  const filteredHospitals = cardiacHospitals.filter((hospital) => {
+  const filteredHospitals = cardiacHospitals.filter((hospital: any) => {
     const serviceMatch =
     selectedServices.length === 0 ||
     selectedServices.some((service) => hospital.services?.includes(service));
     return serviceMatch;
   });
 
-  const sortedHospitals = [...filteredHospitals].sort((a, b) => {
+  const sortedHospitals = [...filteredHospitals].sort((a: any, b: any) => {
     // Always put Artemis Hospital first
     if (a.name === 'Artemis Hospital') return -1;
     if (b.name === 'Artemis Hospital') return 1;
@@ -440,7 +473,7 @@ const CardiacServicePage = () => {
     setFormData({ name: '', country: '', phone: '' });
   };
 
-  const handleInputChange = (e) => {
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData((prev) => ({
       ...prev,
@@ -448,7 +481,7 @@ const CardiacServicePage = () => {
     }));
   };
 
-  const handleQuoteSubmit = (e) => {
+  const handleQuoteSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     console.log('Quote form submitted:', formData);
     closeQuoteForm();
@@ -457,7 +490,7 @@ const CardiacServicePage = () => {
 
 
   // Testimonials filtering
-  const filteredPatients = cardiacPatientStories.filter((patient) => {
+  const filteredPatients = typedCardiacPatientStories.filter((patient) => {
     const search = searchTerm.toLowerCase();
     const matchesSearch =
     patient.name.toLowerCase().includes(search) ||
@@ -479,8 +512,8 @@ const CardiacServicePage = () => {
   const totalTestimonialSlides = Math.max(1, Math.ceil(filteredPatients.length / testimonialCardsPerSlide));
 
   // Handlers
-  const handleServiceToggle = (service) => {
-    setSelectedServices((prev) =>
+  const handleServiceToggle = (service: string) => {
+    setSelectedServices((prev: string[]) =>
     prev.includes(service) ?
     prev.filter((s) => s !== service) :
     [...prev, service]
@@ -488,7 +521,13 @@ const CardiacServicePage = () => {
     setPage(1);
   };
 
-  const handleDepartmentChange = (department) => {
+  interface Department {
+    name: string;
+    route: string;
+    active: boolean;
+  }
+
+  const handleDepartmentChange = (department: Department) => {
     if (department.name !== selectedDepartment) {
       setSelectedDepartment(department.name);
       setPage(1);
@@ -501,14 +540,39 @@ const CardiacServicePage = () => {
       }
     }
   };
+  
+  interface Doctor {
+    name: string;
+    specialty: string;
+    whatsappNumber: string;
+  }
+  
   // WhatsApp booking handler
-  const handleBookAppointment = (doctor) => {
+  const handleBookAppointment = (doctor: Doctor) => {
     const message = encodeURIComponent(
       `Hello! I would like to book an appointment with ${doctor.name} (${doctor.specialty}). Please let me know the available slots.`
     );
     const whatsappUrl = `https://wa.me/${doctor.whatsappNumber}?text=${message}`;
     window.open(whatsappUrl, '_blank');
   };
+
+  // Define Patient interface
+  interface Patient {
+    name: string;
+    country: string;
+    location: string;
+    procedure: string;
+    treatment: string;
+    clinic: string;
+    date: string;
+    age: string;
+    rating: number;
+    recoveryTime: string;
+    savings: string;
+    story: string;
+    beforeAfter: boolean;
+    image: string;
+  }
 
   // Testimonials handlers
   const nextTestimonialSlide = () => {
@@ -525,7 +589,7 @@ const CardiacServicePage = () => {
     });
   };
 
-  const openModal = (patient) => {
+  const openModal = (patient: Patient) => {
     setSelectedPatient(patient);
   };
 
@@ -1101,10 +1165,20 @@ const CardiacServicePage = () => {
                 <Phone size={14} />
                 Contact
               </button>
-              <button className="flex-1 lg:flex-none bg-gradient-to-r from-teal-600 to-teal-700 text-white px-4 py-2 rounded-lg hover:from-teal-700 hover:to-teal-800 transition font-semibold flex items-center justify-center gap-2 text-sm">
+              <Link 
+                to={
+                  hospital.name === 'Artemis Hospital' ? '/artemis-cardiac' :
+                  hospital.name === 'Medanta – The Medicity' ? '/medanta-cardiac' :
+                  hospital.name === 'Indraprastha Apollo Hospital' ? '/apollo-cardiac' :
+                  hospital.name === 'Max Super Speciality Hospital' ? '/max-cardiac' :
+                  hospital.name === 'Amrita Hospital' ? '/amrita-cardiac' :
+                  hospital.name === 'Sarvodaya Hospital' ? '/sarvodaya-cardiac' : '#'
+                }
+                className="flex-1 lg:flex-none bg-gradient-to-r from-teal-600 to-teal-700 text-white px-4 py-2 rounded-lg hover:from-teal-700 hover:to-teal-800 transition font-semibold flex items-center justify-center gap-2 text-sm"
+              >
                 View Details
                 <ChevronRight size={14} />
-              </button>
+              </Link>
             </div>
           </div>
         </div>
@@ -1324,7 +1398,7 @@ const CardiacServicePage = () => {
                         className="flex-shrink-0"
                         style={{ width: `${100 / totalTestimonialSlides}%` }}>
                 <div className={`grid gap-6 ${getTestimonialGridCols()} px-2`}>
-                  {slidePatients.map((patient) =>
+                  {slidePatients.map((patient: any) =>
                           <div
                             key={patient.id}
                             className="bg-white rounded-2xl shadow-sm hover:shadow-xl transition-all duration-300 overflow-hidden cursor-pointer group border border-teal-200 hover:border-teal-300"
@@ -1341,7 +1415,7 @@ const CardiacServicePage = () => {
                       <div className="absolute bottom-3 left-3 bg-white bg-opacity-95 rounded-full px-3 py-1 backdrop-blur-sm">
                         <span className="text-xs text-teal-700 flex items-center">
                           <div className="w-2 h-2 bg-teal-500 rounded-full mr-2 animate-pulse"></div>
-                          {patient.activeTime}
+                          {(patient as any).activeTime}
                         </span>
                       </div>
                       <div className="absolute top-3 right-3 bg-teal-600 text-white rounded-full px-2 py-1">

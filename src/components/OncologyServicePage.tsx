@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import {
   Star,
   MapPin,
@@ -29,11 +30,43 @@ import {
 import Header from './Header';
 import Footer from './Footer';
 
+interface Hospital {
+  id: number;
+  name: string;
+  location: string;
+  image: string;
+  mapEmbedUrl: string;
+  airportDistance: string;
+  description: string;
+  rating: number;
+  reviews: number;
+  specialties: string[];
+  accreditation: string;
+  procedures: Array<{ name: string; price: number; priceRange: string; }>;
+}
+
+interface PatientStory {
+  image: string;
+  name: string;
+  age: number;
+  country: string;
+  rating: number;
+  clinic: string;
+  location: string;
+  procedure: string;
+  date: string;
+  recoveryTime: string;
+  savings: string;
+  story: string;
+  treatment: string;
+  beforeAfter: any;
+}
+
 const PAGE_SIZE = 3;
 
 const OncologyServicePage = () => {
   const [selectedDepartment, setSelectedDepartment] = useState('Oncology');
-  const [selectedServices, setSelectedServices] = useState([]);
+  const [selectedServices, setSelectedServices] = useState<string[]>([]);
   const [sortBy, setSortBy] = useState('Most Popular');
   const [departmentDropdown, setDepartmentDropdown] = useState(false);
   const [servicesDropdown, setServicesDropdown] = useState(false);
@@ -42,7 +75,7 @@ const OncologyServicePage = () => {
   // Testimonials state
   const [currentTestimonialSlide, setCurrentTestimonialSlide] = useState(0);
   const [testimonialCardsPerSlide, setTestimonialCardsPerSlide] = useState(4);
-  const [selectedPatient, setSelectedPatient] = useState(null);
+  const [selectedPatient, setSelectedPatient] = useState<PatientStory | null>(null);
   const [searchTerm, setSearchTerm] = useState('');
   const [activeFilter, setActiveFilter] = useState('All');
   const [showQuoteForm, setShowQuoteForm] = useState(false);
@@ -55,9 +88,9 @@ const OncologyServicePage = () => {
   const departments = [
   { name: 'Oncology', route: '/oncology-service', active: true },
   { name: 'Cardiology', route: '/cardiac', active: true },
-  { name: 'BMT', route: '/bmt', active: false },
-  { name: 'Neuro Spine', route: '/neuro-spine', active: false },
-  { name: 'GI Surgery', route: '/gi-surgery', active: false },
+  { name: 'BMT', route: '/bmt', active: true },
+  { name: 'Neuro Spine', route: '/neuro-spine', active: true },
+  { name: 'GI Surgery', route: '/gi-surgery', active: true },
   { name: 'Orthopaedics', route: '/orthopaedic', active: true },
   { name: 'Pediatric Cardiac', route: '/pediatric-cardiac', active: false }];
 
@@ -419,7 +452,7 @@ const OncologyServicePage = () => {
   const oncologyTreatmentTags = ['All', 'Breast Cancer', 'Lung Cancer', 'Colorectal Cancer', 'Lymphoma', 'Cervical Cancer'];
 
   // Filter and sort logic - Artemis Hospital first
-  const filteredHospitals = oncologyHospitals.filter((hospital) => {
+  const filteredHospitals = oncologyHospitals.filter((hospital: any) => {
     const serviceMatch =
     selectedServices.length === 0 ||
     selectedServices.some((service) => hospital.services?.includes(service));
@@ -449,7 +482,7 @@ const OncologyServicePage = () => {
     setFormData({ name: '', country: '', phone: '' });
   };
 
-  const handleInputChange = (e) => {
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData((prev) => ({
       ...prev,
@@ -457,7 +490,7 @@ const OncologyServicePage = () => {
     }));
   };
 
-  const handleQuoteSubmit = (e) => {
+  const handleQuoteSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     console.log('Quote form submitted:', formData);
     closeQuoteForm();
@@ -487,7 +520,7 @@ const OncologyServicePage = () => {
   const totalTestimonialSlides = Math.max(1, Math.ceil(filteredPatients.length / testimonialCardsPerSlide));
 
   // Handlers
-  const handleServiceToggle = (service) => {
+  const handleServiceToggle = (service: string) => {
     setSelectedServices((prev) =>
     prev.includes(service) ?
     prev.filter((s) => s !== service) :
@@ -496,10 +529,7 @@ const OncologyServicePage = () => {
     setPage(1);
   };
 
-
-
-
-  const handleDepartmentChange = (department) => {
+  const handleDepartmentChange = (department: any) => {
     if (department.name !== selectedDepartment) {
       setSelectedDepartment(department.name);
       setPage(1);
@@ -514,7 +544,7 @@ const OncologyServicePage = () => {
   };
 
   // WhatsApp booking handler
-  const handleBookAppointment = (doctor) => {
+  const handleBookAppointment = (doctor: any) => {
     const message = encodeURIComponent(
       `Hello! I would like to book an appointment with ${doctor.name} (${doctor.specialty}). Please let me know the available slots.`
     );
@@ -537,7 +567,7 @@ const OncologyServicePage = () => {
     });
   };
 
-  const openModal = (patient) => {
+  const openModal = (patient: PatientStory) => {
     setSelectedPatient(patient);
   };
 
@@ -1111,10 +1141,20 @@ const OncologyServicePage = () => {
                 <Phone size={14} />
                 Contact
               </button>
-              <button className="flex-1 lg:flex-none bg-gradient-to-r from-teal-600 to-teal-700 text-white px-4 py-2 rounded-lg hover:from-teal-700 hover:to-teal-800 transition font-semibold flex items-center justify-center gap-2 text-sm">
+              <Link 
+                to={
+                  hospital.name === 'Artemis Hospital' ? '/artemis-onco' :
+                  hospital.name === 'Medanta Hospital' ? '/medanta-onco' :
+                  hospital.name === 'Indraprastha Apollo Hospital' ? '/apollo-onco' :
+                  hospital.name === 'Max Super Speciality Hospital' ? '/max-onco' :
+                  hospital.name === 'Amrita Hospital' ? '/amrita-onco' :
+                  hospital.name === 'Sarvodaya Hospital' ? '/sarvodaya-onco' : '#'
+                }
+                className="flex-1 lg:flex-none bg-gradient-to-r from-teal-600 to-teal-700 text-white px-4 py-2 rounded-lg hover:from-teal-700 hover:to-teal-800 transition font-semibold flex items-center justify-center gap-2 text-sm"
+              >
                 View Details
                 <ChevronRight size={14} />
-              </button>
+              </Link>
             </div>
           </div>
         </div>

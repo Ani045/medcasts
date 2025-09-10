@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import {
   Star,
   MapPin,
@@ -33,7 +34,7 @@ const PAGE_SIZE = 3;
 
 const NeuroSpineServicePage = () => {
   const [selectedDepartment, setSelectedDepartment] = useState('Neuro Spine');
-  const [selectedServices, setSelectedServices] = useState([]);
+  const [selectedServices, setSelectedServices] = useState<string[]>([]);
   const [sortBy, setSortBy] = useState('Most Popular');
   const [departmentDropdown, setDepartmentDropdown] = useState(false);
   const [servicesDropdown, setServicesDropdown] = useState(false);
@@ -42,7 +43,7 @@ const NeuroSpineServicePage = () => {
   // Testimonials state
   const [currentTestimonialSlide, setCurrentTestimonialSlide] = useState(0);
   const [testimonialCardsPerSlide, setTestimonialCardsPerSlide] = useState(4);
-  const [selectedPatient, setSelectedPatient] = useState(null);
+  const [selectedPatient, setSelectedPatient] = useState<any>(null);
   const [searchTerm, setSearchTerm] = useState('');
   const [activeFilter, setActiveFilter] = useState('All');
   const [showQuoteForm, setShowQuoteForm] = useState(false);
@@ -387,8 +388,8 @@ const NeuroSpineServicePage = () => {
   const totalTestimonialSlides = Math.max(1, Math.ceil(filteredPatients.length / testimonialCardsPerSlide));
 
   // Handlers
-  const handleServiceToggle = (service) => {
-    setSelectedServices((prev) =>
+  const handleServiceToggle = (service: string) => {
+    setSelectedServices((prev: string[]) =>
       prev.includes(service) ?
         prev.filter((s) => s !== service) :
         [...prev, service]
@@ -396,7 +397,7 @@ const NeuroSpineServicePage = () => {
     setPage(1);
   };
 
-  const handleDepartmentChange = (department) => {
+  const handleDepartmentChange = (department: any) => {
     if (department.name !== selectedDepartment) {
       setSelectedDepartment(department.name);
       setPage(1);
@@ -416,7 +417,7 @@ const NeuroSpineServicePage = () => {
     setFormData({ name: '', country: '', phone: '' });
   };
 
-  const handleInputChange = (e) => {
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData((prev) => ({
       ...prev,
@@ -424,14 +425,14 @@ const NeuroSpineServicePage = () => {
     }));
   };
 
-  const handleQuoteSubmit = (e) => {
+  const handleQuoteSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     console.log('Quote form submitted:', formData);
     closeQuoteForm();
   };
 
   // WhatsApp booking handler
-  const handleBookAppointment = (doctor) => {
+  const handleBookAppointment = (doctor: any) => {
     const message = encodeURIComponent(
       `Hello! I would like to book an appointment with ${doctor.name} (${doctor.specialty}). Please let me know the available slots.`
     );
@@ -454,7 +455,7 @@ const NeuroSpineServicePage = () => {
     });
   };
 
-  const openModal = (patient) => {
+  const openModal = (patient: any) => {
     setSelectedPatient(patient);
   };
 
@@ -1041,10 +1042,16 @@ const NeuroSpineServicePage = () => {
                             <Phone size={14} />
                             Contact
                           </button>
-                          <button className="flex-1 lg:flex-none bg-gradient-to-r from-teal-600 to-teal-700 text-white px-4 py-2 rounded-lg hover:from-teal-700 hover:to-teal-800 transition font-semibold flex items-center justify-center gap-2 text-sm">
+                          <Link to={`/${hospital.name.toLowerCase().includes('artemis') ? 'artemis' : 
+                            hospital.name.toLowerCase().includes('medanta') ? 'medanta' : 
+                            hospital.name.toLowerCase().includes('apollo') ? 'apollo' : 
+                            hospital.name.toLowerCase().includes('max') ? 'max' : 
+                            hospital.name.toLowerCase().includes('amrita') ? 'amrita' : 
+                            hospital.name.toLowerCase().includes('sarvodaya') ? 'sarvodaya' : ''}-neurospine`} 
+                            className="flex-1 lg:flex-none bg-gradient-to-r from-teal-600 to-teal-700 text-white px-4 py-2 rounded-lg hover:from-teal-700 hover:to-teal-800 transition font-semibold flex items-center justify-center gap-2 text-sm">
                             View Details
                             <ChevronRight size={14} />
-                          </button>
+                          </Link>
                         </div>
                       </div>
                     </div>

@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import {
   Star,
   MapPin,
@@ -33,7 +34,7 @@ const PAGE_SIZE = 3;
 
 const GISurgeryServicePage = () => {
   const [selectedDepartment, setSelectedDepartment] = useState('GI Surgery');
-  const [selectedServices, setSelectedServices] = useState([]);
+  const [selectedServices, setSelectedServices] = useState<string[]>([]);
   const [sortBy, setSortBy] = useState('Most Popular');
   const [departmentDropdown, setDepartmentDropdown] = useState(false);
   const [servicesDropdown, setServicesDropdown] = useState(false);
@@ -42,7 +43,7 @@ const GISurgeryServicePage = () => {
   // Testimonials state
   const [currentTestimonialSlide, setCurrentTestimonialSlide] = useState(0);
   const [testimonialCardsPerSlide, setTestimonialCardsPerSlide] = useState(4);
-  const [selectedPatient, setSelectedPatient] = useState(null);
+  const [selectedPatient, setSelectedPatient] = useState<any>(null);
   const [searchTerm, setSearchTerm] = useState('');
   const [activeFilter, setActiveFilter] = useState('All');
   const [showQuoteForm, setShowQuoteForm] = useState(false);
@@ -389,8 +390,8 @@ const GISurgeryServicePage = () => {
   const totalTestimonialSlides = Math.max(1, Math.ceil(filteredPatients.length / testimonialCardsPerSlide));
 
   // Handlers
-  const handleServiceToggle = (service) => {
-    setSelectedServices((prev) =>
+  const handleServiceToggle = (service: string) => {
+    setSelectedServices((prev: string[]) =>
       prev.includes(service) ?
         prev.filter((s) => s !== service) :
         [...prev, service]
@@ -398,7 +399,7 @@ const GISurgeryServicePage = () => {
     setPage(1);
   };
 
-  const handleDepartmentChange = (department) => {
+  const handleDepartmentChange = (department: any) => {
     if (department.name !== selectedDepartment) {
       setSelectedDepartment(department.name);
       setPage(1);
@@ -418,7 +419,7 @@ const GISurgeryServicePage = () => {
     setFormData({ name: '', country: '', phone: '' });
   };
 
-  const handleInputChange = (e) => {
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData((prev) => ({
       ...prev,
@@ -426,14 +427,14 @@ const GISurgeryServicePage = () => {
     }));
   };
 
-  const handleQuoteSubmit = (e) => {
+  const handleQuoteSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     console.log('Quote form submitted:', formData);
     closeQuoteForm();
   };
 
   // WhatsApp booking handler
-  const handleBookAppointment = (doctor) => {
+  const handleBookAppointment = (doctor: any) => {
     const message = encodeURIComponent(
       `Hello! I would like to book an appointment with ${doctor.name} (${doctor.specialty}). Please let me know the available slots.`
     );
@@ -456,7 +457,7 @@ const GISurgeryServicePage = () => {
     });
   };
 
-  const openModal = (patient) => {
+  const openModal = (patient: any) => {
     setSelectedPatient(patient);
   };
 
@@ -544,12 +545,12 @@ const GISurgeryServicePage = () => {
     };
 
     return (
-      <section className="py-12 bg-gradient-to-br from-green-50 to-emerald-50">
+      <section className="py-12 bg-gradient-to-br from-teal-50 to-cyan-50">
         <div className="max-w-7xl mx-auto px-4">
           <div className="flex flex-col items-center text-center mb-12 md:flex-row md:justify-between md:items-center md:text-left">
             <div>
               <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-2">Best GI Surgery Doctors</h2>
-              <p className="text-green-700">Meet our expert gastroenterologists with years of experience</p>
+              <p className="text-teal-700">Meet our expert gastroenterologists with years of experience</p>
             </div>
 
             {/* Navigation Arrows */}
@@ -557,16 +558,16 @@ const GISurgeryServicePage = () => {
               <div className="flex space-x-2 mt-4 md:mt-0">
                 <button
                   onClick={prevSlide}
-                  className="bg-white rounded-full p-2 shadow-lg hover:shadow-xl transition-all duration-300 border border-green-200 disabled:opacity-50 disabled:cursor-not-allowed hover:border-green-300"
+                  className="bg-white rounded-full p-2 shadow-lg hover:shadow-xl transition-all duration-300 border border-teal-200 disabled:opacity-50 disabled:cursor-not-allowed hover:border-teal-300"
                   disabled={currentSlide === 0}>
-                  <ChevronLeft size={20} className="text-green-600" />
+                  <ChevronLeft size={20} className="text-teal-600" />
                 </button>
 
                 <button
                   onClick={nextSlide}
-                  className="bg-white rounded-full p-2 shadow-lg hover:shadow-xl transition-all duration-300 border border-green-200 disabled:opacity-50 disabled:cursor-not-allowed hover:border-green-300"
+                  className="bg-white rounded-full p-2 shadow-lg hover:shadow-xl transition-all duration-300 border border-teal-200 disabled:opacity-50 disabled:cursor-not-allowed hover:border-teal-300"
                   disabled={currentSlide === totalSlides - 1}>
-                  <ChevronRight size={20} className="text-green-600" />
+                  <ChevronRight size={20} className="text-teal-600" />
                 </button>
               </div>
             )}
@@ -584,24 +585,24 @@ const GISurgeryServicePage = () => {
                       {doctors
                         .slice(slideIndex * cardsPerSlide, (slideIndex + 1) * cardsPerSlide)
                         .map((doctor) => (
-                          <div key={doctor.name} className="bg-white rounded-2xl shadow-sm p-6 hover:shadow-lg hover:-translate-y-1 transition-all duration-300 cursor-pointer text-center border border-green-100 hover:border-green-200">
+                          <div key={doctor.name} className="bg-white rounded-2xl shadow-sm p-6 hover:shadow-lg hover:-translate-y-1 transition-all duration-300 cursor-pointer text-center border border-teal-100 hover:border-teal-200">
                             <div className="relative mb-4">
                               <img
                                 src={doctor.image}
                                 alt={doctor.name}
-                                className="w-20 h-20 rounded-full mx-auto object-cover border-2 border-green-200 hover:border-green-300 transition-colors" />
+                                className="w-20 h-20 rounded-full mx-auto object-cover border-2 border-teal-200 hover:border-teal-300 transition-colors" />
                             </div>
-                            <h3 className="font-bold text-lg text-gray-900 mb-2 hover:text-green-700 transition-colors">{doctor.name}</h3>
-                            <p className="text-green-600 text-sm font-medium mb-2">{doctor.specialty}</p>
+                            <h3 className="font-bold text-lg text-gray-900 mb-2 hover:text-teal-700 transition-colors">{doctor.name}</h3>
+                            <p className="text-teal-600 text-sm font-medium mb-2">{doctor.specialty}</p>
 
                             {/* Experience and Patients Treated */}
                             <div className="grid grid-cols-2 gap-2 mb-3">
-                              <div className="bg-green-50 rounded-lg p-2 border border-green-100">
-                                <div className="text-xs text-green-600 uppercase tracking-wide font-semibold">Experience</div>
+                              <div className="bg-teal-50 rounded-lg p-2 border border-teal-100">
+                                <div className="text-xs text-teal-600 uppercase tracking-wide font-semibold">Experience</div>
                                 <div className="text-gray-900 font-medium text-sm">{doctor.experience}</div>
                               </div>
-                              <div className="bg-green-50 rounded-lg p-2 border border-green-100">
-                                <div className="text-xs text-green-600 uppercase tracking-wide font-semibold">Patients</div>
+                              <div className="bg-teal-50 rounded-lg p-2 border border-teal-100">
+                                <div className="text-xs text-teal-600 uppercase tracking-wide font-semibold">Patients</div>
                                 <div className="text-gray-900 font-medium text-sm">{doctor.patientsTreated}</div>
                               </div>
                             </div>
@@ -620,7 +621,7 @@ const GISurgeryServicePage = () => {
                             {/* Book Appointment Button with WhatsApp Icon */}
                             <button
                               onClick={() => handleBookAppointment(doctor)}
-                              className="w-full bg-gradient-to-r from-green-600 to-green-700 text-white py-2 rounded-lg hover:from-green-700 hover:to-green-800 transition-all font-semibold flex items-center justify-center gap-2 shadow-sm hover:shadow-md">
+                              className="w-full bg-gradient-to-r from-teal-600 to-teal-700 text-white py-2 rounded-lg hover:from-teal-700 hover:to-teal-800 transition-all font-semibold flex items-center justify-center gap-2 shadow-sm hover:shadow-md">
                               <MessageCircle size={16} />
                               Book on WhatsApp
                             </button>
@@ -642,7 +643,7 @@ const GISurgeryServicePage = () => {
       <Header />
 
       {/* Hero Section */}
-      <div className="relative bg-gradient-to-br from-green-700 via-green-600 to-green-500 py-8 lg:py-12 overflow-hidden">
+      <div className="relative bg-gradient-to-br from-teal-700 via-teal-600 to-teal-500 py-8 lg:py-12 overflow-hidden">
         <div className="absolute inset-0 bg-black opacity-5"></div>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <div className="text-center">
@@ -652,7 +653,7 @@ const GISurgeryServicePage = () => {
             </div>
             <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-white mb-4 leading-tight">
               Advanced GI Surgery Care
-              <span className="block bg-gradient-to-r from-green-100 to-emerald-200 bg-clip-text text-transparent">
+              <span className="block bg-gradient-to-r from-teal-100 to-cyan-200 bg-clip-text text-transparent">
                 in India
               </span>
             </h1>
@@ -665,13 +666,13 @@ const GISurgeryServicePage = () => {
                   <Star key={i} size={20} className="text-yellow-400 fill-current" />
                 ))}
               </div>
-              <span className="ml-3 text-green-100 font-medium">(1,850 reviews)</span>
+              <span className="ml-3 text-teal-100 font-medium">(1,850 reviews)</span>
             </div>
 
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <button
                 onClick={openQuoteForm}
-                className="bg-white text-green-700 px-6 py-3 rounded-xl hover:bg-green-50 transition font-semibold">
+                className="bg-white text-teal-700 px-6 py-3 rounded-xl hover:bg-teal-50 transition font-semibold">
                 Get a Free Medical Opinion
               </button>
             </div>
@@ -685,7 +686,7 @@ const GISurgeryServicePage = () => {
         <div className="lg:hidden mb-6">
           <div className="bg-white rounded-xl p-4 shadow-sm">
             <h3 className="font-bold text-lg mb-4 flex items-center">
-              <Shield size={20} className="mr-2 text-green-600" />
+              <Shield size={20} className="mr-2 text-teal-600" />
               Filters
             </h3>
             {/* Department Dropdown */}
@@ -697,7 +698,7 @@ const GISurgeryServicePage = () => {
                 }}
                 className="w-full flex justify-between items-center px-3 py-2 rounded-lg bg-gray-100 text-left font-medium text-gray-700">
                 <span>
-                  <Shield size={16} className="inline mr-2 text-green-600" />
+                  <Shield size={16} className="inline mr-2 text-teal-600" />
                   {selectedDepartment || 'Select Department'}
                 </span>
                 <ChevronDown size={16} className={`${departmentDropdown ? 'rotate-180' : ''} transition-transform`} />
@@ -707,7 +708,7 @@ const GISurgeryServicePage = () => {
                   {departments.map((department) => (
                     <button
                       key={department.name}
-                      className={`block w-full px-4 py-2 text-left hover:bg-gray-50 ${selectedDepartment === department.name ? 'bg-green-50 font-semibold text-green-700' : ''}`}
+                      className={`block w-full px-4 py-2 text-left hover:bg-gray-50 ${selectedDepartment === department.name ? 'bg-teal-50 font-semibold text-teal-700' : ''}`}
                       onClick={() => {
                         handleDepartmentChange(department);
                         setDepartmentDropdown(false);
@@ -727,7 +728,7 @@ const GISurgeryServicePage = () => {
                 }}
                 className="w-full flex justify-between items-center px-3 py-2 rounded-lg bg-gray-100 text-left font-medium text-gray-700">
                 <span>
-                  <Globe size={16} className="inline mr-2 text-green-600" />
+                  <Globe size={16} className="inline mr-2 text-teal-600" />
                   {selectedServices.length === 0 ? 'Select Services' : `${selectedServices.length} Selected`}
                 </span>
                 <ChevronDown size={16} className={`${servicesDropdown ? 'rotate-180' : ''} transition-transform`} />
@@ -769,7 +770,7 @@ const GISurgeryServicePage = () => {
             {/* Filters */}
             <div className="bg-white rounded-xl p-4 shadow-sm">
               <h3 className="font-bold text-lg mb-4 flex items-center">
-                <Shield size={20} className="mr-2 text-green-600" />
+                <Shield size={20} className="mr-2 text-teal-600" />
                 Filters
               </h3>
               {/* Department Dropdown */}
@@ -781,7 +782,7 @@ const GISurgeryServicePage = () => {
                   }}
                   className="w-full flex justify-between items-center px-3 py-2 rounded-lg bg-gray-100 text-left font-medium text-gray-700">
                   <span>
-                    <Shield size={16} className="inline mr-2 text-green-600" />
+                    <Shield size={16} className="inline mr-2 text-teal-600" />
                     {selectedDepartment || 'Select Department'}
                   </span>
                   <ChevronDown size={16} className={`${departmentDropdown ? 'rotate-180' : ''} transition-transform`} />
@@ -791,7 +792,7 @@ const GISurgeryServicePage = () => {
                     {departments.map((department) => (
                       <button
                         key={department.name}
-                        className={`block w-full px-4 py-2 text-left hover:bg-gray-50 ${selectedDepartment === department.name ? 'bg-green-50 font-semibold text-green-700' : ''}`}
+                        className={`block w-full px-4 py-2 text-left hover:bg-gray-50 ${selectedDepartment === department.name ? 'bg-teal-50 font-semibold text-teal-700' : ''}`}
                         onClick={() => {
                           handleDepartmentChange(department);
                           setDepartmentDropdown(false);
@@ -811,7 +812,7 @@ const GISurgeryServicePage = () => {
                   }}
                   className="w-full flex justify-between items-center px-3 py-2 rounded-lg bg-gray-100 text-left font-medium text-gray-700">
                   <span>
-                    <Globe size={16} className="inline mr-2 text-green-600" />
+                    <Globe size={16} className="inline mr-2 text-teal-600" />
                     {selectedServices.length === 0 ? 'Select Services' : `${selectedServices.length} Selected`}
                   </span>
                   <ChevronDown size={16} className={`${servicesDropdown ? 'rotate-180' : ''} transition-transform`} />
@@ -847,25 +848,25 @@ const GISurgeryServicePage = () => {
             </div>
 
             {/* Why Choose India Section */}
-            <div className="bg-gradient-to-br from-green-50 to-emerald-50 rounded-xl p-6">
+            <div className="bg-gradient-to-br from-teal-50 to-cyan-50 rounded-xl p-6">
               <h4 className="font-semibold text-gray-900 flex items-center text-lg mb-4">
-                <Globe size={18} className="mr-2 text-green-600" />
+                <Globe size={18} className="mr-2 text-teal-600" />
                 Why Choose India for GI Surgery?
               </h4>
               <div className="space-y-3">
                 <div className="flex items-center justify-between p-3 bg-white rounded-lg">
                   <div className="flex items-center gap-2">
-                    <DollarSign size={16} className="text-green-600" />
+                    <DollarSign size={16} className="text-teal-600" />
                     <span className="text-gray-800 font-medium">Cost Savings</span>
                   </div>
-                  <span className="font-bold text-green-700">75-90%</span>
+                  <span className="font-bold text-teal-700">75-90%</span>
                 </div>
                 <div className="flex items-center justify-between p-3 bg-white rounded-lg">
                   <div className="flex items-center gap-2">
-                    <Award size={16} className="text-blue-600" />
+                    <Award size={16} className="text-teal-600" />
                     <span className="text-gray-800 font-medium">Success Rate</span>
                   </div>
-                  <span className="font-bold text-blue-700">98%+</span>
+                  <span className="font-bold text-teal-700">98%+</span>
                 </div>
                 <div className="flex items-center justify-between p-3 bg-white rounded-lg">
                   <div className="flex items-center gap-2">
@@ -886,7 +887,7 @@ const GISurgeryServicePage = () => {
                   key={hospital.id}
                   className="bg-white rounded-2xl shadow-sm hover:shadow-lg transition-all duration-300 border border-gray-100 overflow-hidden">
                   {hospital.isTopRated && (
-                    <div className="absolute top-0 right-0 bg-gradient-to-l from-green-600 to-green-500 text-white px-4 py-2 rounded-bl-lg font-semibold text-sm flex items-center z-10">
+                    <div className="absolute top-0 right-0 bg-gradient-to-l from-teal-600 to-teal-500 text-white px-4 py-2 rounded-bl-lg font-semibold text-sm flex items-center z-10">
                       <Award size={14} className="mr-1" />
                       Top Rated
                     </div>
@@ -918,7 +919,7 @@ const GISurgeryServicePage = () => {
                         />
                       </div>
 
-                      <div className="flex items-center gap-2 text-green-600 bg-green-50 px-3 py-1 rounded-lg">
+                      <div className="flex items-center gap-2 text-teal-600 bg-teal-50 px-3 py-1 rounded-lg">
                         <Plane size={14} />
                         <span className="text-sm font-medium">
                           {hospital.airportDistance} from airport
@@ -931,26 +932,26 @@ const GISurgeryServicePage = () => {
                       <div>
                         <div className="flex flex-col lg:flex-row justify-between items-start mb-3 gap-2">
                           <div className="flex-1">
-                            <h3 className="text-xl lg:text-2xl font-bold text-gray-900 hover:text-green-600 mb-2 transition-colors">
+                            <h3 className="text-xl lg:text-2xl font-bold text-gray-900 hover:text-teal-600 mb-2 transition-colors">
                               {hospital.name}
                             </h3>
                             <div className="flex flex-wrap items-center gap-3 text-gray-600 mb-2">
                               <div className="flex items-center gap-1">
                                 <MapPin
                                   size={16}
-                                  className="text-green-600"
+                                  className="text-teal-600"
                                 />
                                 <span className="font-medium">
                                   {hospital.location}
                                 </span>
                               </div>
-                              <span className="bg-gradient-to-r from-green-100 to-emerald-100 text-green-800 px-3 py-1 rounded-full text-sm font-medium">
+                              <span className="bg-gradient-to-r from-teal-100 to-cyan-100 text-teal-800 px-3 py-1 rounded-full text-sm font-medium">
                                 {hospital.accreditation}
                               </span>
                             </div>
                           </div>
                           <div className="text-right">
-                            <div className="text-xl lg:text-2xl font-bold bg-gradient-to-r from-green-600 to-green-700 bg-clip-text text-transparent">
+                            <div className="text-xl lg:text-2xl font-bold bg-gradient-to-r from-teal-600 to-teal-700 bg-clip-text text-transparent">
                               {hospital.priceFromText}
                             </div>
                             <div className="text-sm text-gray-500">
@@ -972,7 +973,7 @@ const GISurgeryServicePage = () => {
                               ({hospital.reviews} reviews)
                             </span>
                           </div>
-                          <div className="flex items-center gap-1 text-green-600">
+                          <div className="flex items-center gap-1 text-teal-600">
                             <TrendingUp size={14} />
                             <span className="font-semibold text-sm">
                               {hospital.successRate} Success Rate
@@ -985,32 +986,32 @@ const GISurgeryServicePage = () => {
                         </p>
 
                         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2 mb-3">
-                          <div className="bg-green-50 rounded-lg p-2 border border-green-100">
-                            <div className="text-xs text-green-600 uppercase tracking-wide font-semibold">
+                          <div className="bg-teal-50 rounded-lg p-2 border border-teal-100">
+                            <div className="text-xs text-teal-600 uppercase tracking-wide font-semibold">
                               Duration
                             </div>
                             <div className="text-gray-900 font-medium text-sm flex items-center gap-1">
                               <Clock
                                 size={12}
-                                className="text-green-600"
+                                className="text-teal-600"
                               />
                               {hospital.duration}
                             </div>
                           </div>
-                          <div className="bg-green-50 rounded-lg p-2 border border-green-100">
-                            <div className="text-xs text-green-600 uppercase tracking-wide font-semibold">
+                          <div className="bg-teal-50 rounded-lg p-2 border border-teal-100">
+                            <div className="text-xs text-teal-600 uppercase tracking-wide font-semibold">
                               Surgeons
                             </div>
                             <div className="text-gray-900 font-medium text-sm flex items-center gap-1">
                               <Users
                                 size={12}
-                                className="text-green-600"
+                                className="text-teal-600"
                               />
                               {hospital.surgeons}
                             </div>
                           </div>
-                          <div className="bg-green-50 rounded-lg p-2 sm:col-span-2 lg:col-span-1 border border-green-100">
-                            <div className="text-xs text-green-600 uppercase tracking-wide font-semibold">
+                          <div className="bg-teal-50 rounded-lg p-2 sm:col-span-2 lg:col-span-1 border border-teal-100">
+                            <div className="text-xs text-teal-600 uppercase tracking-wide font-semibold">
                               Specialties
                             </div>
                             <div className="text-gray-900 font-medium text-sm">
@@ -1026,7 +1027,7 @@ const GISurgeryServicePage = () => {
                             (feature) => (
                               <span
                                 key={feature}
-                                className="px-2 py-1 bg-gradient-to-r from-green-100 to-emerald-100 text-green-800 text-xs rounded-full font-medium border border-green-200">
+                                className="px-2 py-1 bg-gradient-to-r from-teal-100 to-cyan-100 text-teal-800 text-xs rounded-full font-medium border border-teal-200">
                                 {feature}
                               </span>
                             )
@@ -1039,14 +1040,20 @@ const GISurgeryServicePage = () => {
                           Complete package: {hospital.priceFromText} - {hospital.priceToText}
                         </div>
                         <div className="flex flex-col sm:flex-row gap-2 w-full lg:w-auto">
-                          <button className="flex-1 lg:flex-none border border-green-600 text-green-600 px-4 py-2 rounded-lg hover:bg-green-50 transition font-semibold flex items-center justify-center gap-2 text-sm">
+                          <button className="flex-1 lg:flex-none border border-teal-600 text-teal-600 px-4 py-2 rounded-lg hover:bg-teal-50 transition font-semibold flex items-center justify-center gap-2 text-sm">
                             <Phone size={14} />
                             Contact
                           </button>
-                          <button className="flex-1 lg:flex-none bg-gradient-to-r from-green-600 to-green-700 text-white px-4 py-2 rounded-lg hover:from-green-700 hover:to-green-800 transition font-semibold flex items-center justify-center gap-2 text-sm">
+                          <Link to={`/${hospital.name.toLowerCase().includes('artemis') ? 'artemis' : 
+                            hospital.name.toLowerCase().includes('medanta') ? 'medanta' : 
+                            hospital.name.toLowerCase().includes('apollo') ? 'apollo' : 
+                            hospital.name.toLowerCase().includes('max') ? 'max' : 
+                            hospital.name.toLowerCase().includes('amrita') ? 'amrita' : 
+                            hospital.name.toLowerCase().includes('sarvodaya') ? 'sarvodaya' : ''}-gi-surgery`} 
+                            className="flex-1 lg:flex-none bg-gradient-to-r from-teal-600 to-teal-700 text-white px-4 py-2 rounded-lg hover:from-teal-700 hover:to-teal-800 transition font-semibold flex items-center justify-center gap-2 text-sm">
                             View Details
                             <ChevronRight size={14} />
-                          </button>
+                          </Link>
                         </div>
                       </div>
                     </div>
@@ -1059,7 +1066,7 @@ const GISurgeryServicePage = () => {
             {totalPages > 1 && (
               <div className="flex justify-center items-center gap-2 mt-8">
                 <button
-                  className="px-3 py-2 rounded-lg text-green-700 bg-green-50 font-semibold disabled:opacity-50 hover:bg-green-100 transition-colors"
+                  className="px-3 py-2 rounded-lg text-teal-700 bg-teal-50 font-semibold disabled:opacity-50 hover:bg-teal-100 transition-colors"
                   onClick={() => setPage(page - 1)}
                   disabled={page === 1}>
                   <ChevronsLeft size={16} className="inline" /> Prev
@@ -1067,8 +1074,8 @@ const GISurgeryServicePage = () => {
                 {Array.from({ length: totalPages }).map((_, idx) => (
                   <button
                     className={`px-3 py-2 rounded text-sm font-semibold transition-colors ${page === idx + 1
-                      ? "bg-green-600 text-white shadow-sm"
-                      : "bg-white text-green-700 border border-green-200 hover:bg-green-50"
+                      ? "bg-teal-600 text-white shadow-sm"
+                      : "bg-white text-teal-700 border border-teal-200 hover:bg-teal-50"
                       }`}
                     key={idx}
                     onClick={() => setPage(idx + 1)}>
@@ -1076,7 +1083,7 @@ const GISurgeryServicePage = () => {
                   </button>
                 ))}
                 <button
-                  className="px-3 py-2 rounded-lg text-green-700 bg-green-50 font-semibold disabled:opacity-50 hover:bg-green-100 transition-colors"
+                  className="px-3 py-2 rounded-lg text-teal-700 bg-teal-50 font-semibold disabled:opacity-50 hover:bg-teal-100 transition-colors"
                   onClick={() => setPage(page + 1)}
                   disabled={page === totalPages}>
                   Next <ChevronsRight size={16} className="inline" />
@@ -1093,7 +1100,7 @@ const GISurgeryServicePage = () => {
       {/* How It Works Section */}
       <section className="py-12">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="bg-gradient-to-br from-green-700 via-green-600 to-green-500 rounded-3xl p-8 text-white relative overflow-hidden">
+          <div className="bg-gradient-to-br from-teal-700 via-teal-600 to-teal-500 rounded-3xl p-8 text-white relative overflow-hidden">
             <div className="absolute top-4 right-4 w-12 h-12 bg-white bg-opacity-10 rounded-full animate-pulse"></div>
             <div className="absolute bottom-4 left-4 w-8 h-8 bg-white bg-opacity-10 rounded-full animate-pulse delay-1000"></div>
 
@@ -1102,23 +1109,23 @@ const GISurgeryServicePage = () => {
                 <h2 className="text-2xl lg:text-3xl font-bold mb-2">
                   How It Works
                 </h2>
-                <p className="text-green-100 text-sm">
+                <p className="text-teal-100 text-sm">
                   Get world-class GI surgery treatment in 3 simple steps
                 </p>
               </div>
 
               <div className="flex flex-col md:flex-row items-center justify-between gap-4 mb-6">
                 <div className="flex flex-col items-center text-center group">
-                  <div className="w-16 h-16 bg-gradient-to-br from-white to-green-100 rounded-full flex items-center justify-center mb-3 shadow-lg group-hover:scale-110 transition-transform duration-300">
+                  <div className="w-16 h-16 bg-gradient-to-br from-white to-teal-100 rounded-full flex items-center justify-center mb-3 shadow-lg group-hover:scale-110 transition-transform duration-300">
                     <MessageCircle
                       size={28}
-                      className="text-green-600"
+                      className="text-teal-600"
                     />
                   </div>
                   <h3 className="font-bold text-lg mb-1">
                     Share Your Reports
                   </h3>
-                  <p className="text-green-100 text-sm max-w-xs">
+                  <p className="text-teal-100 text-sm max-w-xs">
                     Upload your medical reports and get expert consultation
                   </p>
                 </div>
@@ -1128,16 +1135,16 @@ const GISurgeryServicePage = () => {
                 </div>
 
                 <div className="flex flex-col items-center text-center group">
-                  <div className="w-16 h-16 bg-gradient-to-br from-white to-green-100 rounded-full flex items-center justify-center mb-3 shadow-lg group-hover:scale-110 transition-transform duration-300">
+                  <div className="w-16 h-16 bg-gradient-to-br from-white to-teal-100 rounded-full flex items-center justify-center mb-3 shadow-lg group-hover:scale-110 transition-transform duration-300">
                     <Activity
                       size={28}
-                      className="text-green-600"
+                      className="text-teal-600"
                     />
                   </div>
                   <h3 className="font-bold text-lg mb-1">
                     Get Treatment Plan
                   </h3>
-                  <p className="text-green-100 text-sm max-w-xs">
+                  <p className="text-teal-100 text-sm max-w-xs">
                     Receive personalized GI surgery treatment plan from specialists
                   </p>
                 </div>
@@ -1147,23 +1154,23 @@ const GISurgeryServicePage = () => {
                 </div>
 
                 <div className="flex flex-col items-center text-center group">
-                  <div className="w-16 h-16 bg-gradient-to-br from-white to-green-100 rounded-full flex items-center justify-center mb-3 shadow-lg group-hover:scale-110 transition-transform duration-300">
+                  <div className="w-16 h-16 bg-gradient-to-br from-white to-teal-100 rounded-full flex items-center justify-center mb-3 shadow-lg group-hover:scale-110 transition-transform duration-300">
                     <Plane
                       size={28}
-                      className="text-green-600"
+                      className="text-teal-600"
                     />
                   </div>
                   <h3 className="font-bold text-lg mb-1">
                     Start Your Journey
                   </h3>
-                  <p className="text-green-100 text-sm max-w-xs">
+                  <p className="text-teal-100 text-sm max-w-xs">
                     Travel to India and begin your transformation
                   </p>
                 </div>
               </div>
 
               <div className="text-center">
-                <button className="bg-white text-green-700 px-8 py-3 rounded-full font-bold hover:bg-green-50 transition-colors shadow-lg hover:shadow-xl transform hover:scale-105 duration-300">
+                <button className="bg-white text-teal-700 px-8 py-3 rounded-full font-bold hover:bg-teal-50 transition-colors shadow-lg hover:shadow-xl transform hover:scale-105 duration-300">
                   Start Your GI Surgery Journey
                 </button>
               </div>
@@ -1173,11 +1180,11 @@ const GISurgeryServicePage = () => {
       </section>
 
       {/* Patient Stories Section */}
-      <section className="py-16 bg-gradient-to-br from-green-50 to-emerald-50">
+      <section className="py-16 bg-gradient-to-br from-teal-50 to-cyan-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
             <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-4">
-              Real <span className="text-green-600">GI Surgery Success Stories</span>
+              Real <span className="text-teal-600">GI Surgery Success Stories</span>
             </h2>
             <p className="text-lg text-gray-600 max-w-3xl mx-auto">
               Discover how our patients transformed their lives through world-class gastrointestinal surgery in India
@@ -1204,8 +1211,8 @@ const GISurgeryServicePage = () => {
                   key={tag}
                   onClick={() => setActiveFilter(tag)}
                   className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${activeFilter === tag
-                    ? "bg-green-600 text-white shadow-md"
-                    : "bg-white text-gray-600 hover:bg-green-50 hover:text-green-700 border border-gray-200"
+                    ? "bg-teal-600 text-white shadow-md"
+                    : "bg-white text-gray-600 hover:bg-teal-50 hover:text-teal-700 border border-gray-200"
                     }`}>
                   {tag}
                 </button>
@@ -1227,17 +1234,17 @@ const GISurgeryServicePage = () => {
                       .map((patient) => (
                         <div
                           key={patient.id}
-                          className="bg-white rounded-2xl p-6 shadow-sm hover:shadow-lg transition-all duration-300 cursor-pointer border border-green-100 hover:border-green-200 group"
+                          className="bg-white rounded-2xl p-6 shadow-sm hover:shadow-lg transition-all duration-300 cursor-pointer border border-teal-100 hover:border-teal-200 group"
                           onClick={() => openModal(patient)}>
                           <div className="flex items-start justify-between mb-4">
                             <div className="flex items-center space-x-3">
                               <img
                                 src={patient.image}
                                 alt={patient.name}
-                                className="w-12 h-12 rounded-full object-cover border-2 border-green-200"
+                                className="w-12 h-12 rounded-full object-cover border-2 border-teal-200"
                               />
                               <div>
-                                <h4 className="font-bold text-gray-900 group-hover:text-green-700 transition-colors">
+                                <h4 className="font-bold text-gray-900 group-hover:text-teal-700 transition-colors">
                                   {patient.name}
                                 </h4>
                                 <p className="text-sm text-gray-600">
@@ -1257,7 +1264,7 @@ const GISurgeryServicePage = () => {
                           </div>
 
                           <div className="mb-4">
-                            <div className="inline-flex items-center bg-green-50 text-green-700 px-3 py-1 rounded-full text-sm font-medium mb-2">
+                            <div className="inline-flex items-center bg-teal-50 text-teal-700 px-3 py-1 rounded-full text-sm font-medium mb-2">
                               <Activity size={14} className="mr-1" />
                               {patient.treatment}
                             </div>
@@ -1267,16 +1274,16 @@ const GISurgeryServicePage = () => {
                           </div>
 
                           <div className="grid grid-cols-2 gap-3 mb-4">
-                            <div className="bg-green-50 rounded-lg p-2 border border-green-100">
-                              <div className="text-xs text-green-600 uppercase tracking-wide font-semibold">
+                            <div className="bg-teal-50 rounded-lg p-2 border border-teal-100">
+                              <div className="text-xs text-teal-600 uppercase tracking-wide font-semibold">
                                 Recovery
                               </div>
                               <div className="text-gray-900 font-medium text-sm">
                                 {patient.recoveryTime}
                               </div>
                             </div>
-                            <div className="bg-blue-50 rounded-lg p-2 border border-blue-100">
-                              <div className="text-xs text-blue-600 uppercase tracking-wide font-semibold">
+                            <div className="bg-teal-50 rounded-lg p-2 border border-teal-100">
+                              <div className="text-xs text-teal-600 uppercase tracking-wide font-semibold">
                                 Savings
                               </div>
                               <div className="text-gray-900 font-medium text-sm">
@@ -1287,10 +1294,10 @@ const GISurgeryServicePage = () => {
 
                           <div className="flex items-center justify-between">
                             <div className="flex items-center text-xs text-gray-500">
-                              <div className="w-2 h-2 bg-green-500 rounded-full mr-2"></div>
+                              <div className="w-2 h-2 bg-teal-500 rounded-full mr-2"></div>
                               {patient.activeTime}
                             </div>
-                            <button className="text-green-600 hover:text-green-700 font-medium text-sm group-hover:underline">
+                            <button className="text-teal-600 hover:text-teal-700 font-medium text-sm group-hover:underline">
                               Read Full Story →
                             </button>
                           </div>
@@ -1306,13 +1313,13 @@ const GISurgeryServicePage = () => {
             <div className="flex justify-center gap-4 mt-8">
               <button
                 onClick={prevTestimonialSlide}
-                className="p-3 rounded-full bg-white shadow-lg hover:shadow-xl transition-all duration-300 border border-green-100 hover:border-green-200 group">
-                <ChevronLeft size={20} className="text-green-600 group-hover:text-green-700" />
+                className="p-3 rounded-full bg-white shadow-lg hover:shadow-xl transition-all duration-300 border border-teal-100 hover:border-teal-200 group">
+                <ChevronLeft size={20} className="text-teal-600 group-hover:text-teal-700" />
               </button>
               <button
                 onClick={nextTestimonialSlide}
-                className="p-3 rounded-full bg-white shadow-lg hover:shadow-xl transition-all duration-300 border border-green-100 hover:border-green-200 group">
-                <ChevronRight size={20} className="text-green-600 group-hover:text-green-700" />
+                className="p-3 rounded-full bg-white shadow-lg hover:shadow-xl transition-all duration-300 border border-teal-100 hover:border-teal-200 group">
+                <ChevronRight size={20} className="text-teal-600 group-hover:text-teal-700" />
               </button>
             </div>
           )}
@@ -1338,7 +1345,7 @@ const GISurgeryServicePage = () => {
                 <img
                   src={selectedPatient.image}
                   alt={selectedPatient.name}
-                  className="w-20 h-20 rounded-full object-cover border-4 border-green-200"
+                  className="w-20 h-20 rounded-full object-cover border-4 border-teal-200"
                 />
                 <div className="flex-1">
                   <h3 className="text-2xl font-bold text-gray-900 mb-2">
@@ -1361,7 +1368,7 @@ const GISurgeryServicePage = () => {
                       {selectedPatient.date}
                     </span>
                   </div>
-                  <div className="inline-flex items-center bg-green-50 text-green-700 px-3 py-1 rounded-full text-sm font-medium">
+                  <div className="inline-flex items-center bg-teal-50 text-teal-700 px-3 py-1 rounded-full text-sm font-medium">
                     <Activity size={14} className="mr-1" />
                     {selectedPatient.treatment}
                   </div>
@@ -1369,16 +1376,16 @@ const GISurgeryServicePage = () => {
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-                <div className="bg-green-50 rounded-xl p-4 border border-green-100">
-                  <div className="text-sm text-green-600 uppercase tracking-wide font-semibold mb-1">
+                <div className="bg-teal-50 rounded-xl p-4 border border-teal-100">
+                  <div className="text-sm text-teal-600 uppercase tracking-wide font-semibold mb-1">
                     Procedure
                   </div>
                   <div className="text-gray-900 font-medium">
                     {selectedPatient.procedure}
                   </div>
                 </div>
-                <div className="bg-blue-50 rounded-xl p-4 border border-blue-100">
-                  <div className="text-sm text-blue-600 uppercase tracking-wide font-semibold mb-1">
+                <div className="bg-teal-50 rounded-xl p-4 border border-teal-100">
+                  <div className="text-sm text-teal-600 uppercase tracking-wide font-semibold mb-1">
                     Hospital
                   </div>
                   <div className="text-gray-900 font-medium">
@@ -1388,8 +1395,8 @@ const GISurgeryServicePage = () => {
                     {selectedPatient.location}
                   </div>
                 </div>
-                <div className="bg-green-50 rounded-xl p-4 border border-green-100">
-                  <div className="text-sm text-green-600 uppercase tracking-wide font-semibold mb-1">
+                <div className="bg-teal-50 rounded-xl p-4 border border-teal-100">
+                  <div className="text-sm text-teal-600 uppercase tracking-wide font-semibold mb-1">
                     Total Savings
                   </div>
                   <div className="text-gray-900 font-medium">
@@ -1424,11 +1431,11 @@ const GISurgeryServicePage = () => {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            <div className="bg-gradient-to-br from-green-50 to-emerald-50 rounded-xl p-6 border border-green-100">
+            <div className="bg-gradient-to-br from-teal-50 to-cyan-50 rounded-xl p-6 border border-teal-100">
               <h4 className="font-bold text-gray-900 mb-3 text-lg">
                 Cholecystectomy/Splenectomy
               </h4>
-              <div className="text-2xl font-bold text-green-600 mb-2">
+              <div className="text-2xl font-bold text-teal-600 mb-2">
                 $2,500
               </div>
               <div className="text-sm text-gray-600">
@@ -1436,11 +1443,11 @@ const GISurgeryServicePage = () => {
               </div>
             </div>
 
-            <div className="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-xl p-6 border border-blue-100">
+            <div className="bg-gradient-to-br from-teal-50 to-cyan-50 rounded-xl p-6 border border-teal-100">
               <h4 className="font-bold text-gray-900 mb-3 text-lg">
                 Hernia Repair
               </h4>
-              <div className="text-2xl font-bold text-blue-600 mb-2">
+              <div className="text-2xl font-bold text-teal-600 mb-2">
                 $3,500
               </div>
               <div className="text-sm text-gray-600">
@@ -1505,7 +1512,7 @@ const GISurgeryServicePage = () => {
         </div>
 
         {/* Enhanced CTA Section */}
-        <div className="mt-16 text-center bg-gradient-to-br from-green-600 via-green-500 to-emerald-600 rounded-3xl p-12 text-white relative overflow-hidden">
+        <div className="mt-16 text-center bg-gradient-to-br from-teal-600 via-teal-500 to-cyan-600 rounded-3xl p-12 text-white relative overflow-hidden">
           <div className="absolute inset-0">
             <div className="absolute top-8 left-8 w-16 h-16 bg-white rounded-full opacity-10 animate-pulse"></div>
             <div className="absolute bottom-8 right-8 w-12 h-12 bg-white rounded-full opacity-15 animate-pulse delay-1000"></div>
@@ -1516,16 +1523,16 @@ const GISurgeryServicePage = () => {
             <h3 className="text-2xl lg:text-3xl font-bold mb-4">
               Ready to Start Your GI Surgery Journey?
             </h3>
-            <p className="text-green-100 mb-8 text-lg max-w-2xl mx-auto">
+            <p className="text-teal-100 mb-8 text-lg max-w-2xl mx-auto">
               Get personalized treatment recommendations, cost estimates, and connect with our GI surgery experts for a free consultation
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <button
                 onClick={openQuoteForm}
-                className="bg-white text-green-600 px-8 py-4 rounded-xl hover:bg-green-50 transition font-semibold text-lg">
+                className="bg-white text-teal-600 px-8 py-4 rounded-xl hover:bg-teal-50 transition font-semibold text-lg">
                 Get Free Medical Opinion
               </button>
-              <button className="border-2 border-white text-white px-8 py-4 rounded-xl hover:bg-white hover:text-green-600 transition font-semibold text-lg">
+              <button className="border-2 border-white text-white px-8 py-4 rounded-xl hover:bg-white hover:text-teal-600 transition font-semibold text-lg">
                 Download GI Surgery Guide
               </button>
             </div>
@@ -1548,7 +1555,7 @@ const GISurgeryServicePage = () => {
             </button>
 
             <div className="text-center mb-6">
-              <h3 className="text-2xl font-bold text-green-700 mb-2">
+              <h3 className="text-2xl font-bold text-teal-700 mb-2">
                 Get a Free GI Surgery Quote
               </h3>
               <p className="text-gray-600">
@@ -1564,7 +1571,7 @@ const GISurgeryServicePage = () => {
                   placeholder="Full Name"
                   value={formData.name}
                   onChange={handleInputChange}
-                  className="w-full border border-green-300 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all"
+                  className="w-full border border-teal-300 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent transition-all"
                   required
                 />
               </div>
@@ -1576,7 +1583,7 @@ const GISurgeryServicePage = () => {
                   placeholder="Country"
                   value={formData.country}
                   onChange={handleInputChange}
-                  className="w-full border border-green-300 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all"
+                  className="w-full border border-teal-300 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent transition-all"
                   required
                 />
               </div>
@@ -1588,21 +1595,21 @@ const GISurgeryServicePage = () => {
                   placeholder="Phone Number"
                   value={formData.phone}
                   onChange={handleInputChange}
-                  className="w-full border border-green-300 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all"
+                  className="w-full border border-teal-300 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent transition-all"
                   required
                 />
               </div>
 
               <button
                 type="submit"
-                className="w-full bg-green-700 text-white py-3 rounded-xl font-semibold hover:bg-green-800 transition-colors text-lg">
+                className="w-full bg-teal-700 text-white py-3 rounded-xl font-semibold hover:bg-teal-800 transition-colors text-lg">
                 Submit Request
               </button>
             </form>
 
             <div className="mt-6 pt-4 border-t border-gray-100">
               <p className="text-xs text-gray-500 text-center flex items-center justify-center">
-                <span className="inline-block w-2 h-2 bg-green-500 rounded-full mr-2"></span>
+                <span className="inline-block w-2 h-2 bg-teal-500 rounded-full mr-2"></span>
                 Your information is 100% confidential
               </p>
             </div>

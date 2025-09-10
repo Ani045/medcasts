@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 import {
     Star,
     MapPin,
@@ -1164,12 +1165,18 @@ const BMTServicePage = () => {
                                                         <Phone size={14} />
                                                         Contact
                                                     </button>
-                                                    <button className="flex-1 lg:flex-none bg-gradient-to-r from-teal-600 to-teal-700 text-white px-4 py-2 rounded-lg hover:from-teal-700 hover:to-teal-800 transition font-semibold flex items-center justify-center gap-2 text-sm">
+                                                    <Link to={`/${hospital.name.toLowerCase().includes('artemis') ? 'artemis' : 
+                                                        hospital.name.toLowerCase().includes('medanta') ? 'medanta' : 
+                                                        hospital.name.toLowerCase().includes('apollo') ? 'apollo' : 
+                                                        hospital.name.toLowerCase().includes('max') ? 'max' : 
+                                                        hospital.name.toLowerCase().includes('amrita') ? 'amrita' : 
+                                                        hospital.name.toLowerCase().includes('sarvodaya') ? 'sarvodaya' : ''}-bmt`} 
+                                                        className="flex-1 lg:flex-none bg-gradient-to-r from-teal-600 to-teal-700 text-white px-4 py-2 rounded-lg hover:from-teal-700 hover:to-teal-800 transition font-semibold flex items-center justify-center gap-2 text-sm">
                                                         View Details
                                                         <ChevronRight
                                                             size={14}
                                                         />
-                                                    </button>
+                                                    </Link>
                                                 </div>
                                             </div>
                                         </div>

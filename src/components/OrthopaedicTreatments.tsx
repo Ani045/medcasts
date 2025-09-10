@@ -54,9 +54,9 @@ const OrthopaedicHospitals = () => {
   const departments = [
   { name: 'Orthopaedics', route: '/orthopaedic', active: true },
   { name: 'Oncology', route: '/oncology-service', active: true },
-  { name: 'BMT', route: '/bmt', active: false },
-  { name: 'Neuro Spine', route: '/neuro-spine', active: false },
-  { name: 'GI Surgery', route: '/gi-surgery', active: false },
+  { name: 'BMT', route: '/bmt', active: true },
+  { name: 'Neuro Spine', route: '/neuro-spine', active: true },
+  { name: 'GI Surgery', route: '/gi-surgery', active: true },
   { name: 'Cardiac Surgery', route: '/cardiac', active: true },
   { name: 'Pediatric Cardiac', route: '/pediatric-cardiac', active: false }];
 
